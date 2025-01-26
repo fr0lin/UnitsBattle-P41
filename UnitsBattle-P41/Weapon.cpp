@@ -1,6 +1,20 @@
 #include "Weapon.h"
 #include <iostream>
 
+Weapon::Weapon(const Weapon& other)
+{
+    this->damage = other.damage;
+    this->grade = other.grade;
+    this->name = other.name;
+}
+
+Weapon::Weapon(Weapon&& other) noexcept
+{
+    this->damage = other.damage;
+    this->grade = other.grade;
+    this->name = std::move(other.name);
+}
+
 Weapon::Weapon(unsigned int damage,const std::string& name, Grade grade)
     :damage(damage), name(name), grade(grade)
 {

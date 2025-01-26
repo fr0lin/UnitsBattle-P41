@@ -6,7 +6,7 @@ class Unit
 {
 protected:
 	int HP;
-	Weapon& weapon;
+	Weapon* weapon;
 	unsigned int speed;
 	std::string name;
 	bool IsInDefense;
@@ -16,9 +16,12 @@ public:
 	int GetHP() const;
 	const std::string& GetName() const;
 	Unit(int HP, const std::string& name, const Weapon& weapon);
+	Unit(const Unit& other);
+	Unit(Unit&& other) noexcept;
 	virtual void Attack(Unit& enemy) = 0;
 	virtual int TakeDamage(int value);
 	bool IsDead() const;
 	virtual void Defense();
 	virtual void Print();
+	virtual Unit* clone() const = 0;
 };

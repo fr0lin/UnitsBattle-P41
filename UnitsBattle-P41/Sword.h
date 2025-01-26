@@ -6,5 +6,5 @@ class Sword :
 public:
     Sword();
     void UpGrade() override;
+    virtual Weapon* clone() const override;
 };
-

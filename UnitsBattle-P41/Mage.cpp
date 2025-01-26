@@ -6,12 +6,18 @@ Mage::Mage()
 {
 }
 
+Mage::Mage(const Mage& other)
+	: Unit(other)
+{
+	this->mana = other.mana;
+}
+
 void Mage::Attack(Unit& enemy)
 {
 	if (mana - 15 > 0)
 	{
 		mana -= 15;
-		int damage = enemy.TakeDamage(weapon.GetDamage());
+		int damage = enemy.TakeDamage(weapon->GetDamage());
 		std::cout << "Mage: " << name << " Attack: " << enemy.GetName() << " Damage: (" << damage << ")" << std::endl;
 		if (enemy.IsDead())
 		{
@@ -22,4 +28,9 @@ void Mage::Attack(Unit& enemy)
 	else {
 		std::cout << "Mage: " << name << " No mana" << std::endl;
 	}
+}
+
+Unit* Mage::clone() const
+{
+	return new Mage(*this);
 }

@@ -8,5 +8,5 @@ protected:
 public:
     Bow();
     void UpGrade() override;
+    virtual Weapon* clone() const override;
 };
-

@@ -30,3 +30,8 @@ void Stick::UpGrade()
         break;
     }
 }
+
+Weapon* Stick::clone() const
+{
+    return new Stick(*this);
+}

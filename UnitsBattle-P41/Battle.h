@@ -14,6 +14,7 @@ class Battle
 		BattleTeam(Team* team, int team_id, int turns_count);
 		void Turn();
 		bool CanTurn() const;
+		void Reset();
 	};
 private:
 	std::vector<BattleTeam> teams;
@@ -23,9 +24,9 @@ private:
 	BattleTeam& GetRandomTeam();
 	void ResetAfterBattle();
 	bool SomeoneHasAttack() const;
+	void ResetTeams();
 public:
 	Battle();
-	Battle(std::initializer_list<Team> list);
 	void Append(const Team& team);
 	void Start();
 };

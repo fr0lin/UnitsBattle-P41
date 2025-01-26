@@ -7,12 +7,18 @@ Archer::Archer()
 {
 }
 
+Archer::Archer(const Archer& other)
+	: Unit(other)
+{
+	this->arrows = other.arrows;
+}
+
 void Archer::Attack(Unit& enemy)
 {
 	if (arrows > 0)
 	{
 		arrows--;
-		int damage = enemy.TakeDamage(weapon.GetDamage());
+		int damage = enemy.TakeDamage(weapon->GetDamage());
 		std::cout << "Archer: " << name << " Attack: " << enemy.GetName() << " Damage: (" << damage << ")" << std::endl;
 		if (enemy.IsDead())
 		{
@@ -23,4 +29,9 @@ void Archer::Attack(Unit& enemy)
 	else {
 		std::cout << "Archer: " << name << " No arrows" << std::endl;
 	}
+}
+
+Unit* Archer::clone() const
+{
+	return new Archer(*this);
 }

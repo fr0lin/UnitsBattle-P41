@@ -17,18 +17,35 @@ const std::string& Unit::GetName() const
 }
 
 Unit::Unit(int HP, const std::string& name, const Weapon& weapon)
-	:HP(HP), name(name), weapon(const_cast<Weapon&>(weapon)), IsInDefense(false), armor(5)
+	:HP(HP), name(name), weapon(const_cast<Weapon*>(&weapon)), IsInDefense(false), armor(5)
 {}
 
-//void Unit::Attack(Unit& enemy)
-//{
-//	int damage = enemy.TakeDamage(weapon.GetDamage());
-//	std::cout << "Unit " << name << " Attack " << enemy.name << "Damage: (" << damage << ")" << std::endl;
-//	if (enemy.IsDead())
-//	{
-//		std::cout << enemy.GetName() << " is dead" << std::endl;
-//	}
-//}
+Unit::Unit(const Unit& other)
+{
+	this->HP = other.HP;
+	this->weapon = other.weapon->clone();
+	this->speed = other.speed;
+	this->name = other.name;
+	this->IsInDefense = other.IsInDefense;
+	this->armor = other.armor;
+}
+
+Unit::Unit(Unit&& other) noexcept
+{
+	this->HP = other.HP;
+	this->weapon = other.weapon;
+	this->speed = other.speed;
+	this->name = std::move(other.name);
+	this->IsInDefense = other.IsInDefense;
+	this->armor = other.armor;
+
+	this->HP = 0;
+	this->weapon = nullptr;
+	this->speed = 0;
+	this->name = std::move(other.name);
+	this->IsInDefense = false;
+	this->armor = 0;
+}
 
 int Unit::TakeDamage(int value)
 {

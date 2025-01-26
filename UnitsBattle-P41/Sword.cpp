@@ -30,3 +30,8 @@ void Sword::UpGrade()
         break;
     }
 }
+
+Weapon* Sword::clone() const
+{
+    return new Sword(*this);
+}

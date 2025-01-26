@@ -23,16 +23,6 @@ Team::Team()
 	}
 }
 
-//Team::Team(std::initializer_list<const Unit&> list)
-//	: Team()
-//{
-//	Unit* const * begin = list.begin();
-//	for (size_t i = 0; i < list.size(); i++)
-//	{
-//		units.push_back(*begin);
-//	}
-//}
-
 void Team::SetName(const std::string& value)
 {
 	name = value;
@@ -45,7 +35,7 @@ const std::string& Team::GetName() const
 
 void Team::Append(const Unit& unit)
 {
-	units.push_back(const_cast<Unit*>(&unit));
+	units.push_back(unit.clone());
 }
 
 void Team::Attack(Team& enemies)
@@ -56,8 +46,6 @@ void Team::Attack(Team& enemies)
 			break;
 		auto& target = GetRandomTarget(enemies);
 		units[i]->Attack(target);
-		//if (target.IsDead())
-		//	enemies.units.erase(enemies.units.cbegin() + i);
 	}
 }
 

@@ -8,5 +8,5 @@ protected:
 public:
     Stick();
     void UpGrade() override;
+    virtual Weapon* clone() const override;
 };
-

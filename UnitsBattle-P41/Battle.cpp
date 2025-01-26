@@ -11,7 +11,7 @@ Battle::BattleTeam& Battle::GetRandomTeam()
 	do
 	{
 		rand_index = rand() % teams.size();
-	} while (teams[rand_index].team->IsDead() && !teams[rand_index].have_attack);
+	} while (teams[rand_index].team->IsDead() || !teams[rand_index].have_attack);
 
 	return teams[rand_index];
 }
@@ -31,36 +31,32 @@ bool Battle::SomeoneHasAttack() const
 	return false;
 }
 
+void Battle::ResetTeams()
+{
+	for (size_t i = 0; i < teams.size(); i++)
+	{
+		teams[i].have_attack = true;
+	}
+}
+
 Battle::Battle()
 	: max_teams(2), max_turns_count(20)
 {
-
-}
-
-Battle::Battle(std::initializer_list<Team> list)
-{
-	const Team* begin = list.begin();
-	max_teams = list.size();
-	max_turns_count = 20;
-	for (size_t i = 0; i < list.size(); i++)
-	{
-		teams.push_back(BattleTeam(const_cast<Team*>(begin), i, max_turns_count));
-	}
 }
 
 void Battle::Append(const Team& team)
 {
 	if (teams.size() == max_teams)
 		throw std::exception("Max teams");
-	teams.push_back(BattleTeam(const_cast<Team*>(&team), teams.back().team_id + 1, max_turns_count));
+	teams.push_back(BattleTeam(const_cast<Team*>(&team), teams.size() != 0 ? teams.back().team_id + 1 : 0, max_turns_count));
 }
 
 void Battle::Start()
 {
-	BattleTeam& current = GetRandomTeam();
 	Team* target;
 	do
 	{
+		BattleTeam& current = GetRandomTeam();
 		for (size_t i = 0; i < teams.size(); i++)
 		{
 			if (current.team_id != teams[i].team_id)
@@ -68,9 +64,9 @@ void Battle::Start()
 				if (current.CanTurn())
 				{
 					target = teams[i].team;
+					std::cout << "Team: " << current.team->GetName() << " turn.\n";
 					current.team->Attack(*target);
 					current.Turn();
-					std::cout << "Team: " << current.team->GetName() << " turn.\n";
 					if (target->IsDead())
 					{
 						std::cout << "Team: " << current.team->GetName() << " kill Team: " << target->GetName() << std::endl;
@@ -91,8 +87,10 @@ void Battle::Start()
 			std::cout << "Team: " << current.team->GetName() << " win!\n";
 			return;
 		}
-
-		current = GetRandomTeam();
+		else if (!SomeoneHasAttack())
+		{
+			ResetTeams();
+		}
 
 	} while (SomeoneHasAttack());
 
@@ -112,4 +110,9 @@ void Battle::BattleTeam::Turn()
 bool Battle::BattleTeam::CanTurn() const
 {
 	return turns_count > 0;
+}
+
+void Battle::BattleTeam::Reset()
+{
+	have_attack = false;
 }
